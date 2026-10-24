@@ -1,0 +1,20 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "wave-context",
+      "trigger": "SessionStart",
+      "action": { "type": "command", "command": "bash .kiro/hooks/wave-context.sh" },
+      "timeout": 120,
+      "enabled": true
+    },
+    {
+      "name": "shell-guard",
+      "trigger": "PreToolUse",
+      "matcher": "shell",
+      "action": { "type": "command", "command": "python3 -I .kiro/hooks/shell_guard.py" },
+      "timeout": 15,
+      "enabled": true
+    }
+  ]
+}

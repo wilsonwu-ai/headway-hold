@@ -1,0 +1,20 @@
+{
+  "name": "headway-builder",
+  "description": "Builds HeadwayHold from the spec in .kiro/specs/headway-hold, one wave at a time, run headless from the Kiro CLI.",
+  "prompt": "You are building HeadwayHold, a static, phone-first web app, from the steering files in .kiro/steering/ and the spec in .kiro/specs/headway-hold/. Work only inside this repository. Run npm test after every change and fix failures before you finish. Never run git or gh: another process reviews and commits your work. Never create or edit README.md, KIRO.md, site/eli5/, diagrams/, media/, .kiro/agents/ or .kiro/hooks/. If a hook blocks a command, read its reason and do the task another way.",
+  "tools": ["read", "write", "shell", "web"],
+  "resources": [
+    "file://.kiro/steering/**/*.md",
+    "file://.kiro/specs/headway-hold/*.md"
+  ],
+  "permissions": {
+    "rules": [
+      { "capability": "fs_read", "effect": "allow" },
+      { "capability": "fs_write", "effect": "allow" },
+      { "capability": "fs_write", "match": ["README.md", "KIRO.md", "site/eli5/**", "diagrams/**", "media/**", ".kiro/agents/**", ".kiro/hooks/**", ".git/**"], "effect": "deny" },
+      { "capability": "shell", "effect": "allow" },
+      { "capability": "shell", "match": ["git", "git *", "gh", "gh *", "sudo *", "rm -rf *", "npm publish*", "npx *"], "effect": "deny" },
+      { "capability": "web_fetch", "effect": "allow" }
+    ]
+  }
+}

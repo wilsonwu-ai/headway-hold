@@ -1,0 +1,5 @@
+{"t": "14:16:26", "decision": "allow", "command": "mkdir -p .kiro/specs/headway-hold", "reason": null}
+{"t": "14:21:45", "decision": "allow", "command": "grep -c \"^### Requirement\" .kiro/specs/headway-hold/requirements.md", "reason": null}
+{"t": "14:21:45", "decision": "allow", "command": "grep -c \"^### Property\" .kiro/specs/headway-hold/design.md", "reason": null}
+{"t": "14:21:45", "decision": "allow", "command": "grep -c \"^## Wave\" .kiro/specs/headway-hold/tasks.md", "reason": null}
+{"t": "14:21:46", "decision": "allow", "command": "grep -c \"^- \\[ \\]\" .kiro/specs/headway-hold/tasks.md", "reason": null}
