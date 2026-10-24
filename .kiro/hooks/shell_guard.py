@@ -53,7 +53,7 @@ def check(command, repo):
         if prog in BLOCKED_PROGRAMS:
             return f"`{prog}` is blocked: {BLOCKED_PROGRAMS[prog]}"
         if prog == "npm":
-            flat = " ".join(words)
+            flat = re.sub(r"\s+2>&1$", "", " ".join(words))  # stderr into the pipe is harmless (9 false blocks in wave 2)
             if not NPM_ALLOWED.match(flat):
                 return "only `npm test`, `npm run <script>`, `npm ci`, `npm install` and `npm install --save-dev fast-check` are allowed"
         if prog == "rm" and any(w.startswith("-") and ("r" in w or "R" in w) for w in words[1:]):

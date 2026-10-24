@@ -1,0 +1,152 @@
+{
+  "capturedAt": "2026-10-24T23:37:43.022Z",
+  "capturedAtET": "19:37",
+  "capturedDateET": "October 24, 2026",
+  "sourceUrls": [
+    "https://api-v3.mbta.com/vehicles?filter[route]=Red&include=stop,trip",
+    "https://api-v3.mbta.com/stops?filter[route]=Red",
+    "https://api-v3.mbta.com/route_patterns?filter[route]=Red",
+    "https://api-v3.mbta.com/routes/Red"
+  ],
+  "directionNames": [
+    "South",
+    "North"
+  ],
+  "vehicles": [
+    {
+      "id": "R-548C4798",
+      "label": "1882",
+      "direction": 0,
+      "currentStatus": "STOPPED_AT",
+      "stopId": "Alewife-02",
+      "lat": 42.39618,
+      "lng": -71.14054,
+      "place": {
+        "kind": "platform",
+        "ringIndex": 0
+      }
+    },
+    {
+      "id": "R-548C63A2",
+      "label": "1856",
+      "direction": 0,
+      "currentStatus": "INCOMING_AT",
+      "stopId": "70073",
+      "lat": 42.3617,
+      "lng": -71.0776,
+      "place": {
+        "kind": "segment",
+        "ringIndex": 6,
+        "fraction": 0.552
+      }
+    },
+    {
+      "id": "R-548C5049",
+      "label": "1932",
+      "direction": 0,
+      "currentStatus": "STOPPED_AT",
+      "stopId": "70095",
+      "lat": 42.32052,
+      "lng": -71.05226,
+      "place": {
+        "kind": "platform",
+        "ringIndex": 12
+      }
+    },
+    {
+      "id": "R-548C50C3",
+      "label": "1750",
+      "direction": 0,
+      "currentStatus": "STOPPED_AT",
+      "stopId": "70099",
+      "lat": 42.2668,
+      "lng": -71.02063,
+      "place": {
+        "kind": "platform",
+        "ringIndex": 14
+      }
+    },
+    {
+      "id": "R-548C5E20",
+      "label": "1906",
+      "direction": 0,
+      "currentStatus": "STOPPED_AT",
+      "stopId": "70101",
+      "lat": 42.25203,
+      "lng": -71.00551,
+      "place": {
+        "kind": "platform",
+        "ringIndex": 15
+      }
+    },
+    {
+      "id": "R-548C574E",
+      "label": "1827",
+      "direction": 0,
+      "currentStatus": "INCOMING_AT",
+      "stopId": "70103",
+      "lat": 42.24367,
+      "lng": -71.00469,
+      "place": {
+        "kind": "segment",
+        "ringIndex": 16,
+        "fraction": 0.438
+      }
+    },
+    {
+      "id": "R-548C223D",
+      "label": "1958",
+      "direction": 1,
+      "currentStatus": "IN_TRANSIT_TO",
+      "stopId": "70104",
+      "lat": 42.22099,
+      "lng": -71.00101,
+      "place": {
+        "kind": "segment",
+        "ringIndex": 18,
+        "fraction": 0.499
+      }
+    },
+    {
+      "id": "R-548C5FE1",
+      "label": "1740",
+      "direction": 1,
+      "currentStatus": "IN_TRANSIT_TO",
+      "stopId": "70096",
+      "lat": 42.28412,
+      "lng": -71.03639,
+      "place": {
+        "kind": "segment",
+        "ringIndex": 22,
+        "fraction": 0.207
+      }
+    },
+    {
+      "id": "R-548C5214",
+      "label": "1721",
+      "direction": 1,
+      "currentStatus": "STOPPED_AT",
+      "stopId": "70080",
+      "lat": 42.35266,
+      "lng": -71.05536,
+      "place": {
+        "kind": "platform",
+        "ringIndex": 25
+      }
+    },
+    {
+      "id": "R-548C58CF",
+      "label": "1734",
+      "direction": 1,
+      "currentStatus": "IN_TRANSIT_TO",
+      "stopId": "70064",
+      "lat": 42.38923,
+      "lng": -71.11931,
+      "place": {
+        "kind": "segment",
+        "ringIndex": 33,
+        "fraction": 0.097
+      }
+    }
+  ]
+}

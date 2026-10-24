@@ -59,3 +59,9 @@
 {"t": "15:26:49", "decision": "allow", "command": "DEBUG_INIT=1 node test-init-debug.mjs", "reason": null}
 {"t": "15:27:02", "decision": "allow", "command": "DEBUG_INIT=1 node test-init-debug.mjs", "reason": null}
 {"t": "15:27:27", "decision": "allow", "command": "rm test-init-debug.mjs && npm test", "reason": null}
+{"t": "15:34:23", "decision": "allow", "command": "cd /Users/wilsonwu/Desktop/headway-hold && npm run capture", "reason": null}
+{"t": "15:34:26", "decision": "allow", "command": "curl -s 'https://api-v3.mbta.com/stops?filter[route]=Red' | head -c 5000", "reason": null}
+{"t": "15:34:40", "decision": "allow", "command": "cd /Users/wilsonwu/Desktop/headway-hold && npm run capture", "reason": null}
+{"t": "15:34:48", "decision": "allow", "command": "cd /Users/wilsonwu/Desktop/headway-hold && npm run capture", "reason": null}
+{"t": "15:34:55", "decision": "allow", "command": "cd /Users/wilsonwu/Desktop/headway-hold && npm run capture 2>&1 | head -30", "reason": null}
+{"t": "15:35:13", "decision": "allow", "command": "cd /Users/wilsonwu/Desktop/headway-hold && npm run capture 2>&1 | head -40", "reason": null}

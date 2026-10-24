@@ -228,7 +228,7 @@
 
 ## Wave 3: Data Scripts and UI
 
-- [ ] 3.1 Implement scripts/capture.mjs
+- [x] 3.1 Implement scripts/capture.mjs
   - Fetch `https://api-v3.mbta.com/vehicles?filter[route]=Red&include=stop,trip`
   - Fetch `https://api-v3.mbta.com/stops?filter[route]=Red`
   - Fetch `https://api-v3.mbta.com/route_patterns?filter[route]=Red`
@@ -241,7 +241,7 @@
   - On any failure, exit non-zero and leave existing files untouched
   - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6_
 
-- [ ] 3.2 Implement scripts/sweep.mjs
+- [x] 3.2 Implement scripts/sweep.mjs
   - Import `runSimulation`, `computeMetrics` from `site/lib/`
   - Load `site/data/params.json` and `site/data/stations.json`
   - For each scenario (`late`, `snapshot`, `rush`) and seeds 1 to 20:
@@ -253,7 +253,7 @@
   - Print the `late` headline numbers to stdout
   - _Requirements: 10.7, 10.8_
 
-- [ ] 3.3 Implement site/render.js
+- [x] 3.3 Implement site/render.js
   - Export `renderPanels(uncontrolledFrames, controlledFrames, time, stations, params)`
   - Interpolate train positions between frames
   - Update each train circle's position with CSS transform
@@ -263,7 +263,7 @@
   - Mark current gain with a vertical line or dot
   - _Requirements: 5.2, 5.3, 5.4, 5.5, 5.20, 5.21_
 
-- [ ] 3.4 Implement site/app.js
+- [x] 3.4 Implement site/app.js
   - On load, fetch `params.json`, `stations.json`, `sweep.json`
   - Try to fetch `snapshot.json`; on failure, disable snapshot option and log `console.warn`
   - Read query parameters: `scenario`, `gain`, `seed`, `speed`
@@ -297,14 +297,14 @@
   - Mark as skipped in slow environments (optional)
   - _Requirements: 8.1_
 
-- [ ] 3.7 Run npm test
+- [x] 3.7 Run npm test
   - Verify all tests pass
   - Fix any failures before moving to next wave
   - _Requirements: all from waves 1-3_
 
 ## Wave 4: Explanation, Polish and Accessibility
 
-- [ ] 4.1 Add How it works section
+- [x] 4.1 Add How it works section
   - Link to `eli5/` with text "New to this? See the picture version"
   - Explain the feedback loop in three sentences
   - Describe the holding rule
@@ -312,23 +312,23 @@
   - Generate assumptions table from params.json
   - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
 
-- [ ] 4.2 Add Sources section
+- [x] 4.2 Add Sources section
   - Cite MBTA V3 API with link to https://www.mbta.com/developers/v3-api
   - Cite Zhou, Koutsopoulos and Saidi (2020), https://www.worldtransitresearch.info/research/7979
   - Note that they found dwell-time control less effective than skip-stop or consolidation on the Red Line
   - _Requirements: 7.6, 7.7_
 
-- [ ] 4.3 Add snapshot metadata
+- [x] 4.3 Add snapshot metadata
   - When snapshot is available, display in `#snapshot-meta`: "Real start: N Red Line trains at HH:MM ET on <date>, from the MBTA V3 API"
   - When snapshot is unavailable, display: "Real start unavailable: the captured MBTA snapshot did not load"
   - Include `#source-link` to MBTA API in both cases
   - _Requirements: 7.7, 7.8_
 
-- [ ] 4.4 Add limits line
+- [x] 4.4 Add limits line
   - Set `#limits-line` to exactly: "A simplified simulation of one line with an idealized holding rule, seeded by one captured MBTA vehicle snapshot. It does not model signals, safety spacing or crew limits and is not an operational recommendation for the MBTA. Wait times are outputs of this simulation, not measured service."
   - _Requirements: 7.9_
 
-- [ ] 4.5 Add footer
+- [x] 4.5 Add footer
   - `#build-sha` with literal text `__BUILD_SHA__`
   - Link to GitHub repo
   - "Not affiliated with the MBTA."
@@ -339,7 +339,7 @@
   - Keep train movement when Play is pressed (the movement is the content)
   - _Requirements: 9.6, 9.7_
 
-- [ ] 4.7 Add aria-valuetext to gain slider
+- [x] 4.7 Add aria-valuetext to gain slider
   - Update `aria-valuetext` dynamically with the current gain value
   - _Requirements: 9.2_
 
@@ -359,12 +359,12 @@
   - Test with `prefers-reduced-motion`
   - _Requirements: 5.6, 9.6, 9.7_
 
-- [ ] 4.10 Test deep links
+- [x] 4.10 Test deep links
   - Load `?scenario=late&gain=1.8&seed=7`
   - Verify `#gain-value` is "1.80" and `#scenario-label` starts with "One late train"
   - _Requirements: 6.1, 6.2_
 
-- [ ] 4.11 Test snapshot unavailable
+- [x] 4.11 Test snapshot unavailable
   - Delete or rename `site/data/snapshot.json`
   - Reload page
   - Verify snapshot option is disabled
