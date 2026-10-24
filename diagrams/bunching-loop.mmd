@@ -1,0 +1,8 @@
+graph LR
+  A[A train runs a little late] --> B[More riders wait at its next stop]
+  B --> C[Boarding takes longer]
+  C --> D[It falls further behind]
+  D --> B
+  A -.-> E[The train behind finds fewer riders]
+  E --> F[It catches up]
+  F --> G[Two trains together, then a long gap]

@@ -1,0 +1,9 @@
+graph TD
+  API[MBTA V3 API: stops, route patterns, vehicles] -->|capture script, once during service| DATA[site/data: stations and snapshot]
+  PAR[params.json: every assumption] --> SIM[Simulator: seeded, pure JavaScript]
+  DATA --> SIM
+  SIM --> SW[Sweep script: 51 gains x 20 seeds]
+  SW --> SJ[sweep.json: the headline numbers]
+  SIM --> PAGE[Static page: two panels, gain slider, U-curve]
+  SJ --> PAGE
+  PAGE --> PAGES[GitHub Pages, no server]

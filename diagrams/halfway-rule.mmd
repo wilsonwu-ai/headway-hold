@@ -1,0 +1,6 @@
+graph TD
+  S[Train finishes boarding at a control station] --> Q{Gap behind longer than gap ahead?}
+  Q -- no --> GO[Depart]
+  Q -- yes --> H[Hold for gain times half the difference, up to 3 minutes]
+  H --> GO
+  GO --> R[Over a few stations the gaps even out]

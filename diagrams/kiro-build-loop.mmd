@@ -1,0 +1,9 @@
+graph TD
+  BRIEF[Brief: 16 acceptance criteria] -->|Kiro CLI, headless| STEER[Kiro writes the steering docs]
+  STEER --> SPEC[Kiro writes the spec: requirements, design, tasks]
+  SPEC -->|one wave at a time| CODE[Kiro writes the code and tests, runs npm test]
+  GUARD[Kiro hook: shell guard on every command] -.->|blocks git, other installs, outside hosts| CODE
+  CODE --> CHECK{Claude Code: npm test and the frozen browser test}
+  CHECK -- fails, sent back to Kiro --> CODE
+  CHECK -- passes --> PUSH[Claude Code commits and pushes]
+  PUSH --> PAGES[GitHub Pages]

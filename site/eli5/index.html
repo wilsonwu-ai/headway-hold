@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e131a">
+<meta name="description" content="Nine pictures that show why trains bunch up and how one holding rule helps. A simplified simulation of Boston's Red Line.">
+<title>HeadwayHold: the picture version</title>
+<style>
+@font-face{font-family:"Overpass";src:url("../fonts/overpass.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Overpass Mono";src:url("../fonts/overpass-mono.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+
+:root{color-scheme:dark;--bg:#0e131a;--ink:#e8ecf1;--muted:#9aa6b5;--red:#da291c;--r:6px}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Overpass","Helvetica Neue",Arial,sans-serif;line-height:1.15;-webkit-font-smoothing:antialiased}
+
+.panel{min-height:100vh;min-height:100svh;display:flex;align-items:center;justify-content:center;padding:28px 16px}
+.col{width:100%;max-width:720px}
+.num{display:block;margin:0 0 14px;font:600 14px/1 "Overpass Mono",ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;color:var(--muted)}
+.pic{display:block;width:100%;height:auto;max-height:58vh;max-height:58svh}
+.pic.small{max-height:38vh;max-height:38svh}
+.line{margin:22px 0 0;font-size:clamp(30px,8.4vw,46px);font-weight:700;line-height:1.14;letter-spacing:-.01em;text-wrap:balance}
+.line.long{font-size:clamp(26px,6.8vw,38px)}
+
+.go{display:block;width:100%;max-width:440px;margin:28px auto 0;padding:22px 20px;border-radius:var(--r);background:var(--red);color:#fff;text-align:center;text-decoration:none;font-size:clamp(28px,7.6vw,40px);font-weight:700;line-height:1.1}
+.go:hover{filter:brightness(1.12)}
+.go:focus-visible{outline:4px solid var(--ink);outline-offset:4px}
+.fine{margin:18px 0 0;text-align:center;font-size:15px;line-height:1.4;color:var(--muted)}
+
+/* picture parts */
+.trk{fill:none;stroke:#da291c;stroke-width:8;stroke-linecap:round}
+.ln{fill:none;stroke:#e8ecf1;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.d{stroke:#0e131a;stroke-width:4}
+.ok{fill:#63b283}
+.cl{fill:#f2b33d}
+.bn{fill:#ff5a47}
+.ring{fill:none;stroke:#ff5a47;stroke-width:3.5}
+.slab{fill:#2b3644}
+.t{fill:#e8ecf1;font-weight:700}
+
+/* all motion lives here; reduced-motion users get still pictures */
+@media (prefers-reduced-motion:no-preference){
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes sway{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+  @keyframes slide{0%,8%{transform:translateX(calc(var(--d) * -1))}60%,100%{transform:none}}
+  @keyframes scene{0%{opacity:0}5%,88%{opacity:1}96%,100%{opacity:0}}
+  @keyframes pop{0%,52%{opacity:0}66%,100%{opacity:1}}
+  @keyframes zoom{0%,8%{opacity:0}14%,48%{opacity:1}62%,100%{opacity:0}}
+  @keyframes tint{0%,18%{fill:#f2b33d}58%,100%{fill:#63b283}}
+  @keyframes draw{0%{stroke-dashoffset:100}38%,90%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+  @keyframes pulse{0%{transform:scale(1);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+  @keyframes nudge{0%,100%{opacity:.3}50%{opacity:1}}
+  .orbit{animation:spin 40s linear infinite}
+  .hand{animation:spin 6s linear infinite}
+  .sway{animation:sway 3s ease-in-out infinite}
+  .scene{animation:scene 9s linear infinite}
+  .mv{animation:slide 9s ease-in-out infinite}
+  .lag{animation-timing-function:ease-out}
+  .pop{animation:pop 9s linear infinite}
+  .zoom{animation:zoom 9s linear infinite}
+  .tint{animation:tint 9s linear infinite}
+  .curve{stroke-dasharray:100;animation:draw 8s ease-in-out infinite}
+  .pulse{transform-box:fill-box;transform-origin:center;animation:pulse 2.4s ease-out infinite}
+  .chev{animation:nudge 2.4s ease-in-out infinite}
+}
+.pulse{opacity:0}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><g id="p"><circle cy="-31" r="7"/><path d="M-9 0V-14a9 9 0 0 1 18 0V0z"/></g></defs></svg>
+
+<main>
+
+<!-- 1 -->
+<section class="panel" aria-labelledby="t1"><div class="col">
+  <span class="num" aria-hidden="true">1</span>
+  <svg class="pic" viewBox="0 0 360 300" role="img" aria-label="A red round track with ten evenly spaced green dots, the trains, slowly going around it.">
+    <g transform="translate(180 150)">
+      <circle class="trk" r="112"/>
+      <text class="t" y="9" text-anchor="middle" font-size="26">Red Line</text>
+      <g class="orbit">
+        <circle class="d ok" cy="-112" r="15"/>
+        <circle class="d ok" cy="-112" r="15" transform="rotate(36)"/>
+        <circle class="d ok" cy="-112" r="15" transform="rotate(72)"/>
+        <circle class="d ok" cy="-112" r="15" transform="rotate(108)"/>
+        <circle class="d ok" cy="-112" r="15" transform="rotate(144)"/>
+        <circle class="d ok" cy="-112" r="15" transform="rotate(180)"/>
+        <circle class="d ok" cy="-112" r="15" transform="rotate(216)"/>
+        <circle class="d ok" cy="-112" r="15" transform="rotate(252)"/>
+        <circle class="d ok" cy="-112" r="15" transform="rotate(288)"/>
+        <circle class="d ok" cy="-112" r="15" transform="rotate(324)"/>
+      </g>
+    </g>
+  </svg>
+  <h1 class="line" id="t1">Red Line trains go around a loop, all day.</h1>
+</div></section>
+
+<!-- 2 -->
+<section class="panel" aria-labelledby="t2"><div class="col">
+  <span class="num" aria-hidden="true">2</span>
+  <svg class="pic" viewBox="0 0 360 300" role="img" aria-label="A station platform beside the red line. Five people stand on it, waiting, next to a stop sign.">
+    <path class="trk" d="M-10 252H370"/>
+    <rect class="slab" x="-10" y="196" width="380" height="34" rx="6"/>
+    <path class="ln" style="stroke-width:5" d="M322 214V98"/>
+    <rect x="292" y="60" width="64" height="42" rx="6" fill="#da291c"/>
+    <circle cx="324" cy="81" r="9" fill="none" stroke="#fff" stroke-width="4.5"/>
+    <g transform="translate(52 214)"><g class="sway"><use href="#p" transform="scale(1.7)" fill="#e8ecf1"/></g></g>
+    <g transform="translate(106 214)"><g class="sway" style="animation-delay:-.8s"><use href="#p" transform="scale(2)" fill="#b9c4d2"/></g></g>
+    <g transform="translate(160 214)"><g class="sway" style="animation-delay:-1.6s"><use href="#p" transform="scale(1.6)" fill="#e8ecf1"/></g></g>
+    <g transform="translate(214 214)"><g class="sway" style="animation-delay:-.4s"><use href="#p" transform="scale(1.9)" fill="#cdd6e1"/></g></g>
+    <g transform="translate(268 214)"><g class="sway" style="animation-delay:-1.2s"><use href="#p" transform="scale(1.5)" fill="#e8ecf1"/></g></g>
+  </svg>
+  <h2 class="line" id="t2">People wait at every stop.</h2>
+</div></section>
+
+<!-- 3 -->
+<section class="panel" aria-labelledby="t3"><div class="col">
+  <span class="num" aria-hidden="true">3</span>
+  <svg class="pic" viewBox="0 0 360 300" role="img" aria-label="Three trains on a red track, shown as dots. The middle one is amber with a small clock above it. It has fallen behind the dashed outline where it should be.">
+    <path class="trk" d="M20 170H340"/>
+    <g class="scene">
+      <g class="mv" style="--d:60px"><circle cx="190" cy="170" r="18" fill="none" stroke="#e8ecf1" stroke-width="3.5" stroke-dasharray="5 6"/></g>
+      <g class="mv" style="--d:60px"><circle class="d ok" cx="80" cy="170" r="18"/></g>
+      <g class="mv" style="--d:60px"><circle class="d ok" cx="300" cy="170" r="18"/></g>
+      <g class="mv lag" style="--d:20px">
+        <circle class="d cl" cx="150" cy="170" r="18"/>
+        <g transform="translate(150 110)">
+          <circle r="22" fill="#0e131a" stroke="#e8ecf1" stroke-width="4"/>
+          <path class="ln hand" d="M0 0V-12"/>
+          <path class="ln" d="M0 0L8 6"/>
+        </g>
+      </g>
+      <path class="ln pop" style="stroke:#f2b33d" d="M150 202V218H190V202"/>
+    </g>
+  </svg>
+  <h2 class="line" id="t3">One train is a little late.</h2>
+</div></section>
+
+<!-- 4 -->
+<section class="panel" aria-labelledby="t4"><div class="col">
+  <span class="num" aria-hidden="true">4</span>
+  <svg class="pic" viewBox="0 0 360 300" role="img" aria-label="A big crowd on a platform above an amber train dot. Arrows point down into the train and a small clock sits beside it, showing that loading takes a long time.">
+    <path class="trk" d="M-10 214H370"/>
+    <rect class="slab" x="-10" y="126" width="380" height="36" rx="6"/>
+    <g transform="translate(100 140)"><g class="sway"><use href="#p" transform="scale(1.4)" fill="#7f8da0"/></g></g>
+    <g transform="translate(136 140)"><g class="sway" style="animation-delay:-.6s"><use href="#p" transform="scale(1.4)" fill="#7f8da0"/></g></g>
+    <g transform="translate(172 140)"><g class="sway" style="animation-delay:-1.2s"><use href="#p" transform="scale(1.4)" fill="#7f8da0"/></g></g>
+    <g transform="translate(208 140)"><g class="sway" style="animation-delay:-1.8s"><use href="#p" transform="scale(1.4)" fill="#7f8da0"/></g></g>
+    <g transform="translate(244 140)"><g class="sway" style="animation-delay:-2.4s"><use href="#p" transform="scale(1.4)" fill="#7f8da0"/></g></g>
+    <g transform="translate(82 156)"><g class="sway" style="animation-delay:-.3s"><use href="#p" transform="scale(1.7)" fill="#e8ecf1"/></g></g>
+    <g transform="translate(118 156)"><g class="sway" style="animation-delay:-.9s"><use href="#p" transform="scale(1.7)" fill="#cdd6e1"/></g></g>
+    <g transform="translate(154 156)"><g class="sway" style="animation-delay:-1.5s"><use href="#p" transform="scale(1.7)" fill="#e8ecf1"/></g></g>
+    <g transform="translate(190 156)"><g class="sway" style="animation-delay:-2.1s"><use href="#p" transform="scale(1.7)" fill="#cdd6e1"/></g></g>
+    <g transform="translate(226 156)"><g class="sway" style="animation-delay:-2.7s"><use href="#p" transform="scale(1.7)" fill="#e8ecf1"/></g></g>
+    <g transform="translate(262 156)"><g class="sway" style="animation-delay:-.1s"><use href="#p" transform="scale(1.7)" fill="#cdd6e1"/></g></g>
+    <g class="ln" style="stroke-width:4.5">
+      <path class="chev" d="M128 168l8 9l8-9"/>
+      <path class="chev" style="animation-delay:-.8s" d="M148 168l8 9l8-9"/>
+      <path class="chev" style="animation-delay:-1.6s" d="M168 168l8 9l8-9"/>
+    </g>
+    <circle class="d cl" cx="170" cy="214" r="30"/>
+    <g transform="translate(208 190) scale(.9)">
+      <circle r="22" fill="#0e131a" stroke="#e8ecf1" stroke-width="4"/>
+      <path class="ln hand" d="M0 0V-12"/>
+      <path class="ln" d="M0 0L8 6"/>
+    </g>
+  </svg>
+  <h2 class="line" id="t4">More people are waiting for it, so loading takes longer.</h2>
+</div></section>
+
+<!-- 5 -->
+<section class="panel" aria-labelledby="t5"><div class="col">
+  <span class="num" aria-hidden="true">5</span>
+  <svg class="pic" viewBox="0 0 360 300" role="img" aria-label="Two coral dots with rings, trains, touching on the red track. The one behind has rushed up to the one ahead, because the platform above it has only one person waiting.">
+    <path class="trk" d="M-10 214H370"/>
+    <rect class="slab" x="-10" y="126" width="380" height="36" rx="6"/>
+    <g transform="translate(150 152)"><g class="sway"><use href="#p" transform="scale(1.6)" fill="#e8ecf1"/></g></g>
+    <g class="scene">
+      <circle class="ring pop" cx="216" cy="214" r="33"/>
+      <g class="mv" style="--d:110px"><circle class="ring pop" cx="168" cy="214" r="33"/></g>
+      <circle class="d bn" cx="216" cy="214" r="24"/>
+      <g class="mv" style="--d:110px">
+        <path class="zoom" fill="none" stroke="#ff5a47" stroke-width="4.5" stroke-linecap="round" d="M104 200h32M92 214h44M104 228h32"/>
+        <circle class="d bn" cx="168" cy="214" r="24"/>
+      </g>
+    </g>
+  </svg>
+  <h2 class="line" id="t5">The train behind finds almost nobody, so it catches up.</h2>
+</div></section>
+
+<!-- 6 -->
+<section class="panel" aria-labelledby="t6"><div class="col">
+  <span class="num" aria-hidden="true">6</span>
+  <svg class="pic" viewBox="0 0 360 300" role="img" aria-label="Two coral dots with rings, trains, touching on the right. To their left a long empty stretch of track is marked with a bracket. One person stands alone on a platform with a clock above them, waiting for the next train, a green dot far to the left.">
+    <path class="trk" d="M-10 214H370"/>
+    <rect class="slab" x="140" y="126" width="130" height="36" rx="6"/>
+    <g transform="translate(205 152)"><g class="sway"><use href="#p" transform="scale(2)" fill="#e8ecf1"/></g></g>
+    <g transform="translate(205 38)">
+      <circle r="22" fill="#0e131a" stroke="#e8ecf1" stroke-width="4"/>
+      <path class="ln hand" d="M0 0V-12"/>
+      <path class="ln" d="M0 0L8 6"/>
+    </g>
+    <circle class="d ok" cx="46" cy="214" r="16"/>
+    <circle class="ring" cx="292" cy="214" r="27"/>
+    <circle class="ring" cx="328" cy="214" r="27"/>
+    <circle class="d bn" cx="292" cy="214" r="18"/>
+    <circle class="d bn" cx="328" cy="214" r="18"/>
+    <path class="ln" d="M70 246V266M262 246V266M70 256H262"/>
+  </svg>
+  <h2 class="line" id="t6">Two trains together, then a long empty wait.</h2>
+</div></section>
+
+<!-- 7 -->
+<section class="panel" aria-labelledby="t7"><div class="col">
+  <span class="num" aria-hidden="true">7</span>
+  <svg class="pic" viewBox="0 0 360 300" role="img" aria-label="Three trains on a red track, shown as dots. The first and last keep moving, shown by arrows. The middle one, marked with a pause sign, waits until a ruler below shows it sits exactly halfway between them.">
+    <path class="trk" d="M10 150H350"/>
+    <g class="scene">
+      <g class="mv" style="--d:55px">
+        <circle class="d ok" cx="80" cy="150" r="20"/>
+        <path class="ln" d="M66 92H94M86 84L94 92L86 100"/>
+      </g>
+      <g class="mv" style="--d:55px">
+        <circle class="d ok" cx="300" cy="150" r="20"/>
+        <path class="ln" d="M286 92H314M306 84L314 92L306 100"/>
+      </g>
+      <circle class="d ok tint" cx="190" cy="150" r="20"/>
+      <g transform="translate(190 92)">
+        <circle r="16" fill="#0e131a" stroke="#e8ecf1" stroke-width="3.5"/>
+        <rect x="-6.5" y="-7" width="4.5" height="14" rx="1.5" fill="#e8ecf1"/>
+        <rect x="2" y="-7" width="4.5" height="14" rx="1.5" fill="#e8ecf1"/>
+      </g>
+      <g class="pop">
+        <path d="M190 174V208" fill="none" stroke="#63b283" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="3 6"/>
+        <rect x="80" y="212" width="220" height="22" rx="6" fill="#2b3644"/>
+        <path fill="none" stroke="#e8ecf1" stroke-opacity=".7" stroke-width="3" stroke-linecap="round" d="M102 212v10M124 212v10M146 212v10M168 212v10M212 212v10M234 212v10M256 212v10M278 212v10"/>
+        <path fill="none" stroke="#63b283" stroke-width="5" stroke-linecap="round" d="M190 212v16"/>
+        <path class="ln" d="M80 206V240M300 206V240"/>
+      </g>
+    </g>
+  </svg>
+  <h2 class="line" id="t7">The rule: wait until you are halfway between your neighbors.</h2>
+</div></section>
+
+<!-- 8 -->
+<section class="panel" aria-labelledby="t8"><div class="col">
+  <span class="num" aria-hidden="true">8</span>
+  <svg class="pic" viewBox="0 0 360 300" role="img" aria-label="A U-shaped curve of average rider wait. With too little waiting, trains stay bunched and the wait is high. With too much waiting, riders sit on stopped trains and the wait is high. The lowest point in the middle is marked just right.">
+    <path class="ln" style="stroke:#9aa6b5;stroke-width:3" d="M48 30V236H340"/>
+    <text class="t" transform="rotate(-90 22 133)" x="22" y="133" text-anchor="middle" font-size="15" style="fill:#9aa6b5;font-weight:600">average wait</text>
+    <circle class="ring" style="stroke-width:3" cx="96" cy="50" r="17"/>
+    <circle class="ring" style="stroke-width:3" cx="120" cy="50" r="17"/>
+    <circle class="d bn" cx="96" cy="50" r="11"/>
+    <circle class="d bn" cx="120" cy="50" r="11"/>
+    <circle class="d cl" cx="284" cy="54" r="22"/>
+    <use href="#p" transform="translate(270 66) scale(.5)" fill="#0e131a"/>
+    <use href="#p" transform="translate(284 66) scale(.5)" fill="#0e131a"/>
+    <use href="#p" transform="translate(298 66) scale(.5)" fill="#0e131a"/>
+    <g transform="translate(308 28)">
+      <circle r="11" fill="#0e131a" stroke="#e8ecf1" stroke-width="3"/>
+      <rect x="-4.5" y="-5" width="3.2" height="10" rx="1" fill="#e8ecf1"/>
+      <rect x="1.3" y="-5" width="3.2" height="10" rx="1" fill="#e8ecf1"/>
+    </g>
+    <path class="ln curve" pathLength="100" style="stroke-width:6" d="M64 64Q192 356 320 64"/>
+    <circle class="pulse" cx="192" cy="210" r="13" fill="none" stroke="#63b283" stroke-width="3"/>
+    <circle class="d ok" cx="192" cy="210" r="13"/>
+    <text class="t" x="52" y="268" font-size="18">too little</text>
+    <text class="t" x="192" y="268" text-anchor="middle" font-size="18" style="fill:#63b283">just right</text>
+    <text class="t" x="340" y="268" text-anchor="end" font-size="18">too much</text>
+  </svg>
+  <h2 class="line long" id="t8">Too little waiting: still bunched. Too much: riders sit on stopped trains.</h2>
+</div></section>
+
+<!-- 9 -->
+<section class="panel" aria-labelledby="go"><div class="col">
+  <span class="num" aria-hidden="true">9</span>
+  <svg class="pic small" viewBox="0 0 360 220" role="img" aria-label="A red round track with ten evenly spaced green dots, the trains, spaced out again.">
+    <g transform="translate(180 110)">
+      <circle class="trk" r="84"/>
+      <g class="orbit">
+        <circle class="d ok" cy="-84" r="12"/>
+        <circle class="d ok" cy="-84" r="12" transform="rotate(36)"/>
+        <circle class="d ok" cy="-84" r="12" transform="rotate(72)"/>
+        <circle class="d ok" cy="-84" r="12" transform="rotate(108)"/>
+        <circle class="d ok" cy="-84" r="12" transform="rotate(144)"/>
+        <circle class="d ok" cy="-84" r="12" transform="rotate(180)"/>
+        <circle class="d ok" cy="-84" r="12" transform="rotate(216)"/>
+        <circle class="d ok" cy="-84" r="12" transform="rotate(252)"/>
+        <circle class="d ok" cy="-84" r="12" transform="rotate(288)"/>
+        <circle class="d ok" cy="-84" r="12" transform="rotate(324)"/>
+      </g>
+    </g>
+  </svg>
+  <a class="go" id="go" href="../">Try it yourself</a>
+  <p class="fine">A simplified simulation. Not affiliated with the MBTA.</p>
+</div></section>
+
+</main>
+</body>
+</html>
