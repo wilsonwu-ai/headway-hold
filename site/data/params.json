@@ -1,0 +1,82 @@
+{
+  "speedKmh": {
+    "value": 50,
+    "note": "Average train speed between stations"
+  },
+  "baseRunTimeSec": {
+    "value": 25,
+    "note": "Added to every segment run time"
+  },
+  "runTimeNoiseStddev": {
+    "value": 0.10,
+    "note": "Standard deviation of run time noise"
+  },
+  "ridersPerMinute": {
+    "value": 20,
+    "note": "Base rider arrival rate at most platforms"
+  },
+  "downtownMultiplier": {
+    "value": 3,
+    "note": "Rider rate multiplier for downtown stations"
+  },
+  "rushMultiplier": {
+    "value": 2,
+    "note": "Rider rate multiplier in rush scenario"
+  },
+  "baseDwellSec": {
+    "value": 20,
+    "note": "Minimum dwell time at a platform"
+  },
+  "dwellPerRider": {
+    "value": 0.10,
+    "note": "Dwell time added per rider waiting"
+  },
+  "maxDwellSec": {
+    "value": 150,
+    "note": "Maximum dwell time at a platform"
+  },
+  "terminalLayoverSec": {
+    "value": 300,
+    "note": "Minimum time at Alewife and Braintree"
+  },
+  "minGapSec": {
+    "value": 60,
+    "note": "Minimum seconds between departures at a platform"
+  },
+  "maxHoldSec": {
+    "value": 180,
+    "note": "Maximum hold time at a control station"
+  },
+  "closeFactor": {
+    "value": 0.5,
+    "note": "Gap threshold for close state, as fraction of H"
+  },
+  "bunchedFactor": {
+    "value": 0.25,
+    "note": "Gap threshold for bunched state, as fraction of H"
+  },
+  "warmupMinutes": {
+    "value": 10,
+    "note": "Warm-up period before counting metrics"
+  },
+  "horizonMinutes": {
+    "value": 120,
+    "note": "Total simulation time"
+  },
+  "frameIntervalSec": {
+    "value": 10,
+    "note": "Seconds between recorded frames"
+  },
+  "numTrains": {
+    "value": 10,
+    "note": "Number of trains in late and rush scenarios"
+  },
+  "latenessSec": {
+    "value": 300,
+    "note": "How far behind one train starts in late scenario"
+  },
+  "initialLoadFactor": {
+    "value": 6,
+    "note": "Each train starts with this × average boardings per stop"
+  }
+}

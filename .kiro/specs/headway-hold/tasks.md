@@ -2,29 +2,29 @@
 
 ## Wave 1: Setup and Page Skeleton
 
-- [ ] 1.1 Initialize project structure
+- [x] 1.1 Initialize project structure
   - Create `site/`, `site/lib/`, `site/data/`, `site/fonts/`, `scripts/`, `test/`, `.github/workflows/` directories
   - _Requirements: 8.2, 12.1_
 
-- [ ] 1.2 Create package.json
+- [x] 1.2 Create package.json
   - Set `"type": "module"`
   - Add scripts: `test`, `capture`, `sweep`
   - Add fast-check as devDependency
   - _Requirements: 10.7_
 
-- [ ] 1.3 Download and commit fonts
+- [x] 1.3 Download and commit fonts
   - Download Overpass and Overpass Mono variable fonts from jsDelivr
   - Download OFL.txt license
   - Save in `site/fonts/`
   - _Requirements: 8.7_
 
-- [ ] 1.4 Create site/index.html skeleton
+- [x] 1.4 Create site/index.html skeleton
   - Add all required element IDs: `#claim`, `#panel-uncontrolled`, `#panel-controlled`, `#play-btn`, `#restart-btn`, `#gain-slider`, `#gain-value`, `#stability-badge`, `#scenario-select`, `#scenario-label`, `#speed-select`, `#metric-wait-before`, `#metric-wait-after`, `#metric-delta`, `#metric-platform`, `#metric-hold`, `#metric-headway-var`, `#metric-bunched`, `#sweep-chart`, `#share-btn`, `#share-status`, `#method`, `#snapshot-meta`, `#source-link`, `#limits-line`, `#build-sha`
   - Add skeleton SVGs for both panels
   - Link to `styles.css`, `app.js` as ES module
   - _Requirements: 5.1, 5.2, 5.6, 5.7, 5.8, 5.9, 5.10, 5.11, 5.12, 5.13, 5.14, 5.15, 5.16, 5.17, 5.18, 5.19, 5.20, 5.21, 7.1, 7.9, 7.10_
 
-- [ ] 1.5 Create site/styles.css
+- [x] 1.5 Create site/styles.css
   - Define design tokens: colors (#0E131A background, #DA291C Red Line red, amber for close, green for stable badge), Overpass font stack, 6px border radius, 44px minimum touch targets
   - Style all components from the HTML
   - Mobile-first layout at 390 × 844
@@ -32,16 +32,16 @@
   - WCAG AA contrast, visible focus, `prefers-reduced-motion` support
   - _Requirements: 5.6, 5.22, 9.1, 9.2, 9.4, 9.5, 9.6, 9.7_
 
-- [ ] 1.6 Create site/data/params.json
+- [x] 1.6 Create site/data/params.json
   - Add every model assumption as `{ "key": { "value": ..., "note": "..." } }`
   - Values: speedKmh 50, baseRunTimeSec 25, runTimeNoiseStddev 0.10, ridersPerMinute 20, downtownMultiplier 3, rushMultiplier 2, baseDwellSec 20, dwellPerRider 0.10, maxDwellSec 150, terminalLayoverSec 300, minGapSec 60, maxHoldSec 180, closeFactor 0.5, bunchedFactor 0.25, warmupMinutes 10, horizonMinutes 120, frameIntervalSec 10, numTrains 10, latenessSec 300, initialLoadFactor 6
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 7.5_
 
-- [ ] 1.7 Create site/data/stations.json placeholder
+- [x] 1.7 Create site/data/stations.json placeholder
   - Empty array or minimal structure; the capture script will overwrite this
   - _Requirements: 10.5_
 
-- [ ] 1.8 Create .github/workflows/pages.yml
+- [x] 1.8 Create .github/workflows/pages.yml
   - Trigger on push to main
   - Replace `__BUILD_SHA__` in `site/index.html` with first 7 chars of `$GITHUB_SHA`
   - Upload `site/` with `actions/upload-pages-artifact`

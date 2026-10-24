@@ -1,0 +1,17 @@
+{
+  "name": "headway-hold",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Interactive simulation of Red Line train bunching and holding control",
+  "scripts": {
+    "test": "node --test test/**/*.test.mjs",
+    "capture": "node scripts/capture.mjs",
+    "sweep": "node scripts/sweep.mjs"
+  },
+  "keywords": ["transit", "mbta", "simulation", "headway"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "fast-check": "^3.22.0"
+  }
+}
