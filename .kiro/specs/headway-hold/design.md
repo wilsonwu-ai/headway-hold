@@ -56,10 +56,11 @@ Returns the hold time in seconds. If `hBack > hFwd`, returns `min(maxHold, gain 
 function runSimulation(params, scenario, seed, gain) -> {
   frames: Array<{ time: number, trains: Array<{ ringPos: number, state: string }> }>,
   departures: Array<{ platform: number, time: number, headway: number, ridersWaiting: number, hold: number, ridersOnBoard: number }>,
-  metrics: { wait: number, platformWait: number, heldOnBoard: number, headwaySpread: number, timeBunched: number }
+  T: number,
+  H: number
 }
 ```
-Runs the simulation for the given parameters, scenario, seed and gain. Returns frames for animation, departures for detailed analysis and computed metrics.
+Runs the simulation for the given parameters, scenario, seed and gain. Returns frames for animation, departures for detailed analysis, and T (ring time) and H (average headway).
 
 **Parameters** (in `params`):
 - `stations`: array of `{ name, lat, lng, isControl, isTerminal, isDowntown, ringPos }`
@@ -85,14 +86,74 @@ Runs the simulation for the given parameters, scenario, seed and gain. Returns f
 - For `late` and `rush`: `numTrains`, `lateTrainIndex`, `latenessSec`
 - For `snapshot`: `vehicles` array from snapshot.json
 
-**Ring time and position:**
-- Each platform and segment has a `ringPos` (arrival time in seconds for platforms, start time for segments) computed from the noise-free run times and free dwells at headway H.
-- A train's ring position: at a platform, the platform's `ringPos` plus elapsed dwell (capped at free dwell); in a segment, the segment's start `ringPos` plus fraction × segment's free run time.
-- Gap to train ahead = `(ahead.ringPos − this.ringPos) mod T`, where `T` is the total ring time.
+#### Simulation Algorithm
 
-**First-in-first-out:**
-- A train enters a platform only when the platform is empty, the train ahead has left, and at least `minGapSec` have passed since that departure.
-- While two trains share a segment, the one behind is capped at the leader's ring position.
+This subsection defines the event loop precisely, fixing the under-specification in the first design that led to too few departures.
+
+**Indexes.** Platforms p = 0..n-1 in ring order (n = 34; 0 = Alewife, 17 = Braintree, then northbound back to Davis). Every platform index is taken mod n, and next(p) = (p + 1) mod n.
+
+**Geometry.** All rates are in riders per second: rate[p] = ridersPerMinute / 60 × (downtownMultiplier at the six downtown stations) × (rushMultiplier in `rush`). Compute the following:
+- freeRun[p] = haversine km(p, next(p)) / speedKmh × 3600 + baseRunTimeSec.
+- freeDwell[p](H) = min(maxDwellSec, baseDwellSec + dwellPerRider × rate[p] × H). At Alewife and Braintree, take max(that, terminalLayoverSec).
+- Start from H = (sum of freeRun + n × baseDwellSec) / numTrains. Then, 50 times: T = sum of freeRun + sum of freeDwell(H), and H = T / numTrains.
+- Ring times: arr[0] = 0, and arr[next(p)] = arr[p] + freeDwell[p] + freeRun[p] (so arr[n] = T). dep[p] = arr[p] + freeDwell[p]. Platform p occupies ring times [arr[p], dep[p]), and segment p (from p to next(p)) occupies [dep[p], arr[p+1]).
+
+**Trains and order.**
+- Starting ring positions: in `late` and `rush`, train j is at j × H, except that train 1 is at 1 × H - latenessSec (mod T). In `snapshot`, see "Snapshot" below.
+- Sort trains by starting ring position, ascending, and renumber them 0..N-1 in that order.
+- Ring position increases in the direction of travel, so ahead(i) = (i + 1) mod N and behind(i) = (i - 1 + N) mod N.
+
+**Starting state of each train i at position x.** Find the p with arr[p] <= x < arr[p+1].
+- If x < dep[p], the train is AT_PLATFORM p. Set arriveT = -(x - arr[p]) and dwellEnd = dep[p] - x, so it finishes its free dwell. Set holdEnd = null.
+- Otherwise it is IN_SEGMENT p, with run counter k = 0:
+  - f = (x - dep[p]) / freeRun[p];
+  - actualRun = freeRun[p] × clip(1 + getSegmentNoise(seed, i, 0), 0.5, 1.5);
+  - segStart = -f × actualRun, and readyAt = segStart + actualRun.
+- If two trains start at the same platform, the one behind starts IN_SEGMENT (p - 1) with readyAt = 0, waiting at the end of that segment.
+- Every train's run counter starts at 1 if it started IN_SEGMENT, else at 0.
+- Load: every train starts with load = initialLoadFactor × (the mean over platforms of rate[p] × H).
+
+**Starting state of each platform p.**
+- For every train j, compute d_j = (x_j - dep[p]) mod T, in [0, T). The train with the smallest d_j is the last train to have left p.
+- Set lastTrain[p] = that j and lastDep[p] = -d_j (in seconds).
+- occupant[p] = the train AT_PLATFORM p, or null.
+
+**Each second t = 0, 1, ..., horizonMinutes × 60 - 1, for each train i in order 0..N-1, do the following.**
+
+If AT_PLATFORM p:
+1. If holdEnd is null and t >= dwellEnd: the dwell is over. If p is a control station and gain > 0, then:
+   - hFwd = t - lastDep[p];
+   - hBack = (dep[p] - pos(behind(i))) mod T;
+   - hold = computeHold(hFwd, hBack, gain, maxHoldSec).
+   
+   Otherwise hold = 0. Set holdEnd = t + hold.
+2. If holdEnd is not null and t >= holdEnd: depart.
+   - h = t - lastDep[p]; boarded = rate[p] × h.
+   - load = (0 at Alewife and Braintree, else load × 5/6) + boarded.
+   - Push { trainIndex: i, platform: p, time: t, headway: h, ridersWaiting: boarded, hold, ridersOnBoard: load }.
+   - Set lastDep[p] = t, lastTrain[p] = i and occupant[p] = null.
+   - Become IN_SEGMENT p, with k = the train's run counter (then add 1 to the counter), actualRun = freeRun[p] × clip(1 + getSegmentNoise(seed, i, k), 0.5, 1.5), segStart = t and readyAt = t + actualRun.
+
+If IN_SEGMENT p and t >= readyAt, try to enter q = next(p). Enter only if all three hold:
+- occupant[q] is null;
+- lastTrain[q] is ahead(i);
+- t - lastDep[q] >= minGapSec.
+
+On entering, become AT_PLATFORM q with arriveT = t and occupant[q] = i. Its dwell:
+- waiting = rate[q] × (t - lastDep[q]);
+- dwell = min(maxDwellSec, baseDwellSec + dwellPerRider × waiting), and at least terminalLayoverSec at Alewife and Braintree;
+- dwellEnd = t + dwell, holdEnd = null.
+
+If any check fails, wait and try again next second.
+
+**Position pos(i) at time t, used for hBack, frames and states:**
+- AT_PLATFORM p: pos = arr[p] + min(t - arriveT, freeDwell[p]).
+- IN_SEGMENT p: raw = dep[p] + min(1, (t - segStart) / actualRun) × freeRun[p]. Then cap it so the train never passes the train ahead: if (pos(ahead(i)) - raw) mod T > T / 2, use pos(ahead(i)) instead of raw.
+- Positions are taken mod T.
+
+**Frames.** When t % frameIntervalSec == 0, record for every train { ringPos: pos, state }. Gap = (pos(ahead(i)) - pos(i)) mod T. State is "bunched" if gap < bunchedFactor × H, "close" if gap < closeFactor × H, else "ok".
+
+**Snapshot.** For a vehicle at { kind: "platform", ringIndex: p }, x = arr[p] + freeDwell[p] / 2. For { kind: "segment", ringIndex: q, fraction: f }, the segment ends at q, so it is segment p = q - 1 and x = dep[p] + f × freeRun[p]. Then sort and continue as above.
 
 ### Metrics (`site/lib/metrics.js`)
 

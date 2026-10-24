@@ -50,7 +50,94 @@
 
 ## Wave 2: Simulation Core and Tests
 
-- [ ] 2.1 Implement site/lib/rng.js
+- [x] 2.1 Implement site/lib/rng.js
+  - Export createRNG(seed) returning { next: () => number }
+  - Implement mulberry32 algorithm
+  - Export getSegmentNoise(rng, trainIndex, segmentIndex) returning normal(0, 0.10) using Box-Muller
+  - _Requirements: 1.2, 1.10_
+
+- [x] 2.2 Write test/rng.test.mjs
+  - Test: same seed gives same sequence
+  - Test: `getSegmentNoise` is deterministic (same seed, train, segment → same noise)
+  - Tag with `// Feature: headway-hold, Requirement 1.10`
+  - _Requirements: 1.10_
+
+- [x] 2.3 Implement site/lib/controller.js
+  - Export `computeHold(hFwd, hBack, gain, maxHold)`
+  - Return `min(maxHold, gain × (hBack − hFwd) ÷ 2)` when `hBack > hFwd`, else 0
+  - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
+
+- [x] 2.4 Write test/controller.test.mjs
+  - Test: gain 0 returns 0
+  - Test: gain 1 with hBack = 100, hFwd = 50 returns 25
+  - Test: hold is capped at maxHold
+  - Test: hBack ≤ hFwd returns 0
+  - Tag with `// Feature: headway-hold, Requirement 2.1`
+  - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
+
+- [x] 2.5 Implement site/lib/sim.js
+  - Export `runSimulation(params, scenario, seed, gain)`
+  - Compute ring positions for all stations from haversine distances
+  - Solve for T and H by iterating free dwells
+  - Place trains according to scenario (late: evenly spaced with one 300s behind; snapshot: from vehicles array; rush: like late with 2× riders)
+  - Simulate in 1-second steps for `horizonMinutes × 60` seconds
+  - Apply run-time noise, compute dwells, enforce first-in-first-out, cap following train's position
+  - Call `computeHold` at control stations
+  - Record frame every `frameIntervalSec` seconds
+  - Return `{ frames, departures, metrics }`
+  - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.1, 2.2, 2.3, 4.1, 4.2, 4.4_
+
+- [x] 2.6 Write test/sim.test.mjs
+  - Test: ring time computation with a simple 3-station ring
+  - Test: train placement in `late` scenario (10 trains, one 300s behind)
+  - Test: terminal layover is at least 300s
+  - Test: minGapSec enforced (train waits at platform entry)
+  - Test: following train capped at leader's position in a segment
+  - Tag with `// Feature: headway-hold, Requirement 1.5`
+  - _Requirements: 1.4, 1.5, 1.6, 1.9, 1.10_
+
+- [x] 2.7 Implement site/lib/metrics.js
+  - Export `computeMetrics(departures, frames, params)`
+  - Filter departures to those after `warmupMinutes × 60` seconds
+  - Compute wait: `(Σ rate × h² ÷ 2 + Σ hold × ridersOnBoard) ÷ (Σ rate × h) ÷ 60`
+  - Compute platformWait: first term alone
+  - Compute heldOnBoard: second term ÷ denominator × 60
+  - Compute headwaySpread: coefficient of variation of headways
+  - Compute timeBunched: fraction of frames with at least one train within `bunchedFactor × H` of train ahead
+  - Return `{ wait, platformWait, heldOnBoard, headwaySpread, timeBunched }`
+  - _Requirements: 3.1, 3.2, 3.3, 3.4_
+
+- [x] 2.8 Write test/metrics.test.mjs
+  - Test: wait formula with known departures
+  - Test: headway spread (CV) computation
+  - Test: timeBunched counts bunched frames correctly
+  - Tag with `// Feature: headway-hold, Requirement 3.1`
+  - _Requirements: 3.1, 3.2, 3.3, 3.4_
+
+- [x] 2.9 Implement site/lib/sweep.js
+  - Export `sweepGains(params, scenario, seed, gains)` returning `[{ gain, wait }]`
+  - Export `findBestGain(sweep)` returning `{ bestGain, bestWait }`
+  - Export `getBadge(gain, bestGain, wait, bestWait, uncontrolledWait)` returning badge string
+  - Badge: "Too weak: still bunching" when `gain < bestGain && wait > threshold`
+  - Badge: "Overcorrecting" when `gain > bestGain && wait > threshold`
+  - Badge: "Stable" otherwise, where `threshold = bestWait + 0.5 × (uncontrolledWait − bestWait)`
+  - _Requirements: 3.5, 3.6, 3.7, 3.8, 3.9_
+
+- [x] 2.10 Write test/sweep.test.mjs
+  - Test: findBestGain selects lowest wait
+  - Test: getBadge logic for all three cases
+  - Tag with `// Feature: headway-hold, Requirement 3.5`
+  - _Requirements: 3.5, 3.6, 3.7, 3.8, 3.9_
+
+- [x] 2.11 Write test/properties.test.mjs
+  - Property 1: run twice with same inputs, assert identical metrics (fast-check with seed, scenario `late` or `rush`, gain 0 to 2.5)
+  - Property 2: train order never changes, no two trains on one platform (same arbitraries)
+  - Property 3: dwells and holds within bounds, no negative riders (same arbitraries)
+  - Property 4: gain 0 equals uncontrolled exactly (seed, scenario)
+  - Property 5: no hold exceeds maxHoldSec (seed, scenario, gain)
+  - At least 100 runs per property
+  - Tag each with `// Feature: headway-hold, Property N`
+  - _Requirements: 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.10, 2.4, 2.5_
   - Export `createRNG(seed)` returning `{ next: () => number }`
   - Implement mulberry32 algorithm
   - Export `getSegmentNoise(rng, trainIndex, segmentIndex)` returning normal(0, 0.10) using Box-Muller

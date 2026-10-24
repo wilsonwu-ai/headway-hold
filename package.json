@@ -8,10 +8,15 @@
     "capture": "node scripts/capture.mjs",
     "sweep": "node scripts/sweep.mjs"
   },
-  "keywords": ["transit", "mbta", "simulation", "headway"],
+  "keywords": [
+    "transit",
+    "mbta",
+    "simulation",
+    "headway"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "fast-check": "^3.22.0"
+    "fast-check": "^3.23.2"
   }
 }
