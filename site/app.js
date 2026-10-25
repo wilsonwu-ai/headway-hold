@@ -97,6 +97,9 @@ function renderMetrics() {
   $('metric-delta').textContent = d < 0
     ? `HeadwayHold cuts the average wait by ${Math.abs(d).toFixed(0)}%`
     : `HeadwayHold raises the average wait by ${d.toFixed(0)}%`;
+  const s = state.sweepData[state.scenario];
+  $('metric-seeds').textContent = `Over 20 random seeds at gain ${s.bestGain.toFixed(2)}, the average wait is ` +
+    `${Math.abs(s.meanPercentChange).toFixed(1)}% ${s.meanPercentChange < 0 ? 'shorter' : 'longer'}. This run uses seed ${state.seed}.`;
   const p = pct(c.platformWait, u.platformWait);
   $('metric-platform').textContent = `Platform waits: ${Math.abs(p).toFixed(0)}% ${p <= 0 ? 'shorter' : 'longer'}`;
   $('metric-hold').textContent = `Held on board: ${c.heldOnBoard.toFixed(0)} s per rider`;

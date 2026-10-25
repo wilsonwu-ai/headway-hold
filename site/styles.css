@@ -467,7 +467,16 @@ footer {
 button, select, input[type="range"] { min-height: var(--touch-target); }
 :focus-visible { outline: 3px solid var(--color-text); outline-offset: 2px; }
 
+/* Keep both panels and their waits on one screen on a laptop too */
+.panels svg { max-height: 72vh; }
+.controls { flex-direction: row; }
+.controls button { flex: 1; max-width: 12rem; }
+
 @media (max-width: 768px) {
   .panels { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
   .panels svg { max-height: 46vh; }
+}
+
+@media (max-width: 390px) {
+  .controls { flex-direction: row; }
 }
